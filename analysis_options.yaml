@@ -1,28 +1,235 @@
-# This file configures the analyzer, which statically analyzes Dart code to
-# check for errors, warnings, and lints.
-#
-# The issues identified by the analyzer are surfaced in the UI of Dart-enabled
-# IDEs (https://dart.dev/tools#ides-and-editors). The analyzer can also be
-# invoked from the command line by running `flutter analyze`.
+# HINTS:
 
-# The following line activates a set of recommended lints for Flutter apps,
-# packages, and plugins designed to encourage good coding practices.
+# Adopting an Incremental Linting Strategy:
+# An incremental linting strategy might be beneficial if we're introducing linting into an existing project.
+# This means starting with fewer, easier-to-implement rules and gradually adding more complex or stricter rules.
+# With this approach, we avoid overwhelming developers with a sudden influx of lint warnings.
+
+# Managing False Positives and Negatives:
+# While linters are potent tools for maintaining code quality, they aren't foolproof.
+# Occasionally, they might flag issues that aren't problems (false positives) or miss potential problems (false negatives).
+# As a developer, we must understand and manage these possibilities effectively.
+# For false positives, we can use the ignore comment.
+# we should still adhere to our knowledge of best practices and code quality for false negatives, even if the linter doesn't flag an issue.
+
 include: package:flutter_lints/flutter.yaml
 
-linter:
-  # The lint rules applied to this project can be customized in the
-  # section below to disable rules from the `package:flutter_lints/flutter.yaml`
-  # included above or to enable additional rules. A list of all available lints
-  # and their documentation is published at https://dart.dev/lints.
-  #
-  # Instead of disabling a lint rule for the entire project in the
-  # section below, it can also be suppressed for a single line of code
-  # or a specific dart file by using the `// ignore: name_of_lint` and
-  # `// ignore_for_file: name_of_lint` syntax on the line or in the file
-  # producing the lint.
-  rules:
-    # avoid_print: false  # Uncomment to disable the `avoid_print` rule
-    # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
+analyzer:
+  errors:
+    # allow having TODOs in code
+    todo: info
 
-# Additional information about this file can be found at
-# https://dart.dev/guides/language/analysis-options
+    # treat missing required parameters as an error (not a hint)
+    missing_required_param: warning
+
+    # treat missing returns as an error (not a hint)
+    missing_return: warning
+
+    # Reassignment should be treated as warning (not a hint)
+    parameter_assignments: warning
+
+    # Custom
+    prefer_relative_imports: warning
+    camel_case_types: warning
+    avoid_catching_errors: warning
+    avoid_empty_else: error
+    unnecessary_brace_in_string_interps: warning
+    avoid_redundant_argument_values: warning
+    leading_newlines_in_multiline_strings: warning
+    require_trailing_commas: warning
+    curly_braces_in_flow_control_structures: error
+    always_declare_return_types: warning
+    always_put_control_body_on_new_line: ignore
+    always_put_required_named_parameters_first: ignore
+    always_require_non_null_named_parameters: ignore
+    annotate_overrides: warning
+    avoid_bool_literals_in_conditional_expressions: warning
+    avoid_classes_with_only_static_members: warning
+    avoid_double_and_int_checks: warning
+    avoid_field_initializers_in_const_classes: warning
+    avoid_final_parameters: warning
+    avoid_function_literals_in_foreach_calls: warning
+    avoid_implementing_value_types: warning
+    avoid_init_to_null: warning
+    avoid_multiple_declarations_per_line: warning
+    avoid_null_checks_in_equality_operators: warning
+    avoid_positional_boolean_parameters: ignore
+    avoid_return_types_on_setters: warning
+    avoid_types_as_parameter_names: warning
+    avoid_unused_constructor_parameters: warning
+    avoid_void_async: ignore
+    sort_constructors_first: warning
+
+  exclude:
+    # Generated for Flutter web apps. Since it is auto-generated, errors should be ignored
+    - lib/generated_plugin_registrant.dart
+
+linter:
+  # A list of all available lints and their documentation is published at
+  # https://dart-lang.github.io/linter/lints/index.html.
+
+  rules:
+    # ----------------- Style rules -----------------
+
+    # https://dart-lang.github.io/linter/lints/camel_case_types.html
+    - camel_case_types
+
+    # Errors aren't for catching but to prevent prior to runtime
+    # http://dart-lang.github.io/linter/lints/avoid_catching_errors.html
+    - avoid_catching_errors
+
+    # Prevents accidental empty else cases. See samples in documentation
+    # http://dart-lang.github.io/linter/lints/avoid_empty_else.html
+    - avoid_empty_else
+
+    # Remove unnecessary braces
+    # https://dart-lang.github.io/linter/lints/unnecessary_brace_in_string_interps.html
+    - unnecessary_brace_in_string_interps
+
+    # Don't explicitly set defaults
+    # Dart SDK: >= 2.8.0-dev.1.0 • (Linter v0.1.107)
+    # https://dart-lang.github.io/linter/lints/avoid_redundant_argument_values.html
+    - avoid_redundant_argument_values
+
+    # Add leading \n which which makes multiline strings easier to read
+    # Dart SDK: >= 2.8.0-dev.16.0 • (Linter v0.1.113)
+    # https://dart-lang.github.io/linter/lints/leading_newlines_in_multiline_strings.html
+    - leading_newlines_in_multiline_strings
+
+    # ----------------- formatting -----------------
+
+    # Dartfmt formats differently when adding trailing commas. This lint makes sure there is zero doubt in how code
+    # should be formatted.
+    # This rule is debatable, though.A non-representative [vote](https://twitter.com/passsy/status/1427220769050972162)
+    # shows a strong tendency towards enabling this rule.
+    # Especially because the code example does only include the debatable formatting changes. There
+    # are more, especially in Flutter build methods which make the code clearly better.
+    # Dart SDK: 2.14.0-2.0.dev • (Linter v1.3.0)
+    # https://dart-lang.github.io/linter/lints/require_trailing_commas.html
+    - require_trailing_commas
+
+    # https://dart.dev/tools/linter-rules/curly_braces_in_flow_control_structures
+    - curly_braces_in_flow_control_structures
+
+    # ----------------- OTHER CUSTOM RULES -----------------
+
+    # Prevents accidental return type changes which results in a breaking API change.
+    # Enforcing return type makes API changes visible in a diff
+    # http://dart-lang.github.io/linter/lints/always_declare_return_types.html
+    - always_declare_return_types
+
+    # Single line `if`s are fine as recommended in Effective Dart "DO format your code using dartfmt"
+    # http://dart-lang.github.io/linter/lints/always_put_control_body_on_new_line.html
+    - always_put_control_body_on_new_line
+
+    # Flutter widgets always put a Key as first optional parameter which breaks this rule.
+    # Also violates other orderings like matching the class fields or alphabetically.
+    # http://dart-lang.github.io/linter/lints/always_declare_return_types.html
+    - always_put_required_named_parameters_first
+
+    # All non nullable named parameters should be and annotated with @required.
+    # This allows API consumers to get warnings via lint rather than a crash a runtime.
+    # Might become obsolete with Non-Nullable types
+    #
+    # http://dart-lang.github.io/linter/lints/always_require_non_null_named_parameters.html
+    - always_require_non_null_named_parameters
+
+    # Always use package: imports.
+    # While both, relative and package imports are fine, package imports are preferred because they allow for easy find
+    # and replace
+    # Conflicting with: prefer_relative_imports, avoid_relative_lib_imports
+    # Dart SDK: >= 2.10.0-10.0.dev • (Linter v0.1.118)
+    # http://dart-lang.github.io/linter/lints/always_use_package_imports.html
+    # TO BE DISCUSSED
+    # - always_use_package_imports
+
+    # Protect against unintentionally overriding superclass members
+    # http://dart-lang.github.io/linter/lints/annotate_overrides.html
+    - annotate_overrides
+
+    # All methods should define a return type. dynamic is no exception.
+    # Violates Effective Dart "PREFER annotating with dynamic instead of letting inference fail"
+    # http://dart-lang.github.io/linter/lints/avoid_annotating_with_dynamic.html
+    # - avoid_annotating_with_dynamic
+
+    # Highlights boolean expressions which can be simplified
+    # http://dart-lang.github.io/linter/lints/avoid_bool_literals_in_conditional_expressions.html
+    - avoid_bool_literals_in_conditional_expressions
+
+    # Can usually be replaced with an extension
+    # Dart SDK: >= 2.0.0 • (Linter v0.1.31)
+    # http://dart-lang.github.io/linter/lints/avoid_classes_with_only_static_members.html
+    - avoid_classes_with_only_static_members
+
+    # Never accidentally use dynamic invocations, as it makes type error very hard to find
+    # Dart SDK: unreleased • (Linter v1.0)
+    # https://dart-lang.github.io/linter/lints/avoid_dynamic_calls.html
+    # - avoid_dynamic_calls
+
+    # Since all dart code may be compiled to JS this should be considered.
+    # Disable it manually when you're explicitly not targeting web
+    # http://dart-lang.github.io/linter/lints/avoid_double_and_int_checks.html
+    - avoid_double_and_int_checks
+
+    # It is expected that mutable objects which override hash & equals shouldn't be used as keys for hashmaps.
+    # This one use case doesn't make all hash & equals implementations for mutable classes bad.
+    # https://dart-lang.github.io/linter/lints/avoid_equals_and_hash_code_on_mutable_classes.html
+    # - avoid_equals_and_hash_code_on_mutable_classes
+
+    # Use different quotes instead of escaping
+    # Dart SDK: >= 2.8.0-dev.11.0 • (Linter v0.1.111)
+    # https://dart-lang.github.io/linter/lints/avoid_escaping_inner_quotes.html
+    # - avoid_escaping_inner_quotes
+
+    # Prevents unnecessary allocation of a field
+    # http://dart-lang.github.io/linter/lints/avoid_field_initializers_in_const_classes.html
+    - avoid_field_initializers_in_const_classes
+
+    # Since lint `parameter_assignments` is enabled, the final parameter doesn't add more safety, it would be just verbose
+    # Conflicts with prefer_final_parameters
+    #
+    # http://dart-lang.github.io/linter/lints/avoid_final_parameters.html
+    - avoid_final_parameters
+
+    # Prevents allocating a lambda and allows return/break/continue control flow statements inside the loop
+    # Dart SDK: >= 2.0.0 • (Linter v0.1.30)
+    # http://dart-lang.github.io/linter/lints/avoid_function_literals_in_foreach_calls.html
+    - avoid_function_literals_in_foreach_calls
+
+    # Don't break value types by implementing them
+    # http://dart-lang.github.io/linter/lints/avoid_implementing_value_types.html
+    - avoid_implementing_value_types
+
+    # Removes redundant `= null;`
+    # https://dart-lang.github.io/linter/lints/avoid_init_to_null.html
+    - avoid_init_to_null
+
+    # Not useful for coding golf, but in every environment where code is maintained by multiple authors.
+    # https://dart-lang.github.io/linter/lints/avoid_multiple_declarations_per_line.html
+    - avoid_multiple_declarations_per_line
+
+    # Null checks aren't required in ==() operators
+    # https://dart-lang.github.io/linter/lints/avoid_null_checks_in_equality_operators.html
+    - avoid_null_checks_in_equality_operators
+
+    # Good APIs don't use ambiguous boolean parameters. Instead, use named parameters
+    # https://dart-lang.github.io/linter/lints/avoid_positional_boolean_parameters.html
+    - avoid_positional_boolean_parameters
+
+    # Setters always return void, therefore defining void is redundant
+    # https://dart-lang.github.io/linter/lints/avoid_return_types_on_setters.html
+    - avoid_return_types_on_setters
+
+    # Don't use a parameter names which can be confused with a types (i.e. int, bool, num, ...)
+    # https://dart-lang.github.io/linter/lints/avoid_types_as_parameter_names.html
+    - avoid_types_as_parameter_names
+
+    # Unused parameters should be removed
+    # https://dart-lang.github.io/linter/lints/avoid_unused_constructor_parameters.html
+    - avoid_unused_constructor_parameters
+
+    # For async functions use `Future<void>` as return value, not `void`
+    # This allows usage of the await keyword and prevents operations from running in parallel.
+    #
+    # https://dart-lang.github.io/linter/lints/avoid_void_async.html
+    - avoid_void_async
