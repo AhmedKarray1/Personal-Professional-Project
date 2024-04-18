@@ -32,7 +32,7 @@ analyzer:
     prefer_relative_imports: warning
     camel_case_types: warning
     avoid_catching_errors: warning
-    avoid_empty_else: error
+    avoid_empty_else: warning
     unnecessary_brace_in_string_interps: warning
     avoid_redundant_argument_values: warning
     leading_newlines_in_multiline_strings: warning
