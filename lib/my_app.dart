@@ -4,14 +4,14 @@ import "package:ppp/home_screen.dart";
 import "package:ppp/questions_screen.dart";
 import "package:ppp/results_screen.dart";
 
-class Quiz extends StatefulWidget {
-  const Quiz({super.key});
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
 
   @override
-  State<Quiz> createState() => _QuizState();
+  State<MyApp> createState() => _MyAppState();
 }
 
-class _QuizState extends State<Quiz> {
+class _MyAppState extends State<MyApp> {
   List<String> selectedAnswers = [];
   var activeScreen = "home-screen";
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:ppp/questions_summary/question_identifier.dart';
 
 class SummaryItem extends StatelessWidget {
@@ -14,8 +13,8 @@ class SummaryItem extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          QuestionIdentifier(summaryInfo["question_index"] as int,
-              summaryInfo["user_answer"] == summaryInfo["correct_answer"]),
+          QuestionIdentifier(
+              summaryInfo["question_index"] as int, summaryInfo["user_answer"] == summaryInfo["correct_answer"]),
           const SizedBox(
             width: 20,
           ),
@@ -25,23 +24,20 @@ class SummaryItem extends StatelessWidget {
               children: [
                 Text(
                   summaryInfo["question"] as String,
-                  style: GoogleFonts.lato(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700),
+                  style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(
                   height: 5,
                 ),
                 Text(
                   summaryInfo["user_answer"] as String,
-                  style: GoogleFonts.lato(
+                  style: const TextStyle(
                     color: Color.fromARGB(255, 237, 48, 205),
                   ),
                 ),
                 Text(
                   summaryInfo["correct_answer"] as String,
-                  style: GoogleFonts.lato(
+                  style: const TextStyle(
                     color: Color.fromARGB(255, 76, 96, 225),
                   ),
                 ),
