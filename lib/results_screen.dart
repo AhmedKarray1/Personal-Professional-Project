@@ -56,14 +56,15 @@ class ResultsScreen extends StatelessWidget {
               height: 30,
             ),
             TextButton.icon(
-                onPressed: () {
-                  switchScreen("home-screen");
-                },
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.white70,
-                ),
-                icon: const Icon(Icons.restart_alt_rounded),
-                label: const Text("Restart Quiz!")),
+              onPressed: () {
+                switchScreen("home-screen");
+              },
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Colors.white70,
+              ),
+              icon: const Icon(Icons.restart_alt_rounded),
+              label: const Text("Restart Quiz!"),
+            ),
           ],
         ),
       ),

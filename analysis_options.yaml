@@ -130,9 +130,6 @@ linter:
     # All non nullable named parameters should be and annotated with @required.
     # This allows API consumers to get warnings via lint rather than a crash a runtime.
     # Might become obsolete with Non-Nullable types
-    #
-    # http://dart-lang.github.io/linter/lints/always_require_non_null_named_parameters.html
-    - always_require_non_null_named_parameters
 
     # Always use package: imports.
     # While both, relative and package imports are fine, package imports are preferred because they allow for easy find

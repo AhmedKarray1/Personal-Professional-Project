@@ -14,7 +14,9 @@ class SummaryItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           QuestionIdentifier(
-              summaryInfo["question_index"] as int, summaryInfo["user_answer"] == summaryInfo["correct_answer"]),
+            summaryInfo["question_index"] as int,
+            summaryInfo["user_answer"] == summaryInfo["correct_answer"],
+          ),
           const SizedBox(
             width: 20,
           ),
