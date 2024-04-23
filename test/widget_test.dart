@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ppp/answer_button.dart';
 import 'package:ppp/main.dart';
-import 'package:ppp/results_screen.dart';
 
 void main() {
   testWidgets('navigate to questions screen', (WidgetTester tester) async {
@@ -17,8 +15,15 @@ void main() {
       find.byType(Column),
       findsOneWidget,
     );
+    expect(find.text('What are the main building blocks of Flutter UIs?'), findsOneWidget);
 
-    await tester.tap(find.byWidget(AnswerButton("answerText", () {})));
+    await tester.tap(find.byKey(const Key("0")));
+    expect(find.text('How are Flutter UIs built?'), findsOneWidget);
+
+    // await tester.tap(find.byKey(const Key("0")));
+
+    // expect(find.text('You answered 1 out of 6 questions correctly!'), findsOneWidget);
+
     // await tester.tap(find.byType(ElevatedButton));
     // await tester.tap(find.byType(ElevatedButton));
     // await tester.tap(find.byType(ElevatedButton));

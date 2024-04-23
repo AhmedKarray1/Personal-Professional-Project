@@ -45,13 +45,25 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
             const SizedBox(
               height: 30,
             ),
-            ...currentQuestion.getShuffledAnswers().map(
-              (e) {
-                return AnswerButton(e, () {
-                  answerQuestion(e);
-                });
-              },
-            ),
+            // ...currentQuestion.getShuffledAnswers().map(
+            //   (e) {
+            //     return AnswerButton(e, () {
+            //       answerQuestion(e);
+            //     });
+            //   },
+            // ),
+            for (var i = 0; i < currentQuestion.getShuffledAnswers().length; i++)
+              AnswerButton(
+                currentQuestion.getShuffledAnswers()[i],
+                () {
+                  answerQuestion(
+                    currentQuestion.getShuffledAnswers()[i],
+                  );
+                },
+                key: ValueKey(
+                  i.toString(),
+                ),
+              ),
           ],
         ),
       ),
