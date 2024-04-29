@@ -41,9 +41,8 @@ platform :android do
   lane :deploy_to_firebase do
     firebase_app_distribution(
       app: "1:784461465067:android:4b5a2efbb961b4b53845ae",
-      groups: "your_distribution_groups",
-      apk_path: "build\app\outputs\flutter-apk\app-debug.apk ",
-      firebase_cli_token: "your_firebase_cli_token"
+      apk_path: "../build/app/outputs/flutter-apk/app-debug.apk ",
+      
     )
   end
 end
