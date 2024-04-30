@@ -18,5 +18,3 @@ jobs:
         run: flutter pub get
       - name: Run Linter
         run: flutter analyze
-      - name: Run Tests
-        run: flutter pub run lint
