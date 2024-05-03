@@ -30,6 +30,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
       child: Container(
         margin: const EdgeInsets.all(40),
         child: Column(
+          key: const Key("questions-column"),
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -45,13 +46,6 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
             const SizedBox(
               height: 30,
             ),
-            // ...currentQuestion.getShuffledAnswers().map(
-            //   (e) {
-            //     return AnswerButton(e, () {
-            //       answerQuestion(e);
-            //     });
-            //   },
-            // ),
             for (var i = 0; i < currentQuestion.getShuffledAnswers().length; i++)
               AnswerButton(
                 currentQuestion.getShuffledAnswers()[i],

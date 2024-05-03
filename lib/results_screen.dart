@@ -32,13 +32,16 @@ class ResultsScreen extends StatelessWidget {
       },
     ).length;
 
-    return SizedBox(
-      width: double.infinity,
-      child: Container(
-        margin: const EdgeInsets.all(40),
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      padding: const EdgeInsets.all(40),
+      child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const SizedBox(
+              height: 60,
+            ),
             Text(
               'You answered $numCorrectQuestions out of $numTotalQuestions questions correctly!',
               style: const TextStyle(
@@ -56,6 +59,7 @@ class ResultsScreen extends StatelessWidget {
               height: 30,
             ),
             TextButton.icon(
+              key: const Key("restart-quiz-button"),
               onPressed: () {
                 switchScreen("home-screen");
               },
