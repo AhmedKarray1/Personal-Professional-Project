@@ -38,4 +38,4 @@ jobs:
           cd android
           fastlane deploy_to_firebase
         env:
-          FIREBASE_TOKEN: 9c8b41cf7b0aa75d80ad14eb41f81347e13561ac
+          FIREBASE_Crendentials: ${{ secrets.FIREBASE_CREDENTIALS }}
