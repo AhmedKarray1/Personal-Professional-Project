@@ -44,7 +44,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(
-              height: 30,
+              height: 31,
             ),
             for (var i = 0; i < currentQuestion.getShuffledAnswers().length; i++)
               AnswerButton(
