@@ -40,7 +40,7 @@ platform :android do
 
   lane :deploy_to_firebase do
     firebase_app_distribution(
-      service_credentials_file: "./app/google-services.json",
+      service_credentials_file: "./service-account-credentials.json",
       app: "1:784461465067:android:4b5a2efbb961b4b53845ae",
       apk_path: "../build/app/outputs/flutter-apk/app-release.apk",
       
