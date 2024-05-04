@@ -37,3 +37,5 @@ jobs:
         run: |
           cd android
           fastlane deploy_to_firebase
+        env:
+          FIREBASE_TOKEN: karray.ahmed01@gmail.com
