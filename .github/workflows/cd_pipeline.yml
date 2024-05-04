@@ -10,50 +10,32 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
-      # Install dependencies
       - name: Set up Flutter
         uses: subosito/flutter-action@v1
         with:
           flutter-version: "3.19.6"
-
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.3"
-
-      - name: Setup Firebase CLI
-        run: |
-          npm install -g firebase-tools
 
       - name: Setup Fastlane
         run: |
           cd android
           bundle install
           cd ../..
-
       - name: Install dependencies
         run: flutter pub get
-
       - name: Run Linter
         run: flutter analyze
-
       - name: Run Tests
         run: flutter test
-
       - name: Build
         run: flutter build apk
 
-      # Authenticate with Firebase App Distribution
-      - name: Firebase login
-        run: |
-          cd android
-          bundle exec firebase login
-
-      # Deploy with Fastlane
       - name: Deploy with Fastlane
         run: |
           cd android
-          bundle exec fastlane deploy_to_firebase
+          fastlane deploy_to_firebase
         env:
           FIREBASE_TOKEN: karray.ahmed01@gmail.com
