@@ -39,3 +39,4 @@ jobs:
           fastlane deploy_to_firebase
         env:
           FIREBASE_Crendentials: ${{ secrets.FIREBASE_CREDENTIALS }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
