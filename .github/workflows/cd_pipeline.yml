@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  lint:
+  setup_env:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -24,15 +24,29 @@ jobs:
           cd android
           bundle install
           cd ..
+  lint:
+    runs-on: ubuntu-latest
+    steps:
       - name: Install dependencies
         run: flutter pub get
       - name: Run Linter
         run: flutter analyze
+  test:
+    runs-on: ubuntu-latest
+    steps:
       - name: Run Tests
         run: flutter test
       - name: Build
         run: flutter build apk
-
+      - name: Deploy with Fastlane
+        run: |
+          cd android
+          fastlane deploy_to_firebase
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build
+        run: flutter build apk
       - name: Deploy with Fastlane
         run: |
           cd android
