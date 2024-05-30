@@ -28,7 +28,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
     return SizedBox(
       width: double.infinity,
       child: Container(
-        margin: const EdgeInsets.all(40),
+        margin: const EdgeInsets.all(41),
         child: Column(
           key: const Key("questions-column"),
           mainAxisAlignment: MainAxisAlignment.center,
