@@ -32,16 +32,15 @@ jobs:
           sudo apt-get install -y wget unzip
           wget https://github.com/jeremylong/DependencyCheck/releases/download/v7.3.2/dependency-check-7.3.2-release.zip
           unzip dependency-check-7.3.2-release.zip -d dependency-check
-          sudo mv dependency-check/dependency-check/bin/dependency-check.sh /usr/local/bin/
-          sudo chmod +x /usr/local/bin/dependency-check.sh
           sudo mv dependency-check/dependency-check /usr/local/dependency-check
+          sudo chmod +x /usr/local/dependency-check/bin/dependency-check.sh
           echo "/usr/local/dependency-check/bin" >> $GITHUB_PATH
 
       - name: Verify OWASP Dependency-Check Installation
-        run: dependency-check.sh --version
+        run: /usr/local/dependency-check/bin/dependency-check.sh --version
 
       - name: Run OWASP Dependency-Check on Android Dependencies
-        run: dependency-check.sh --project "My Project" --scan ./android --format "ALL" --out dependency-check-report
+        run: /usr/local/dependency-check/bin/dependency-check.sh --project "My Project" --scan ./android --format "ALL" --out dependency-check-report
 
       - name: Upload Dependency-Check Report
         uses: actions/upload-artifact@v2
