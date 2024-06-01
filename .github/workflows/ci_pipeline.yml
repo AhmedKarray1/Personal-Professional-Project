@@ -76,7 +76,7 @@ jobs:
                   {"title": "Job", "value": "${{ github.job }}", "short": true},
                   {"title": "Runner OS", "value": "${{ runner.os }}", "short": true},
                   {"title": "Run ID", "value": "${{ github.run_id }}", "short": true},
-                  {"title": "Report", "value": "[Dependency-Check Report]($REPORT_URL)", "short": false}
+                  {"title": "Report", "value": "[Dependency-Check Report]($REPORT_URL/dependency-check-report/dependency-check-report.html)", "short": false}
                 ]
               }
             ]
@@ -101,7 +101,7 @@ jobs:
                   {"title": "Job", "value": "${{ github.job }}", "short": true},
                   {"title": "Runner OS", "value": "${{ runner.os }}", "short": true},
                   {"title": "Run ID", "value": "${{ github.run_id }}", "short": true},
-                  {"title": "Report", "value": "[Dependency-Check Report]($REPORT_URL)", "short": false}
+                  {"title": "Report", "value": "[Dependency-Check Report]($REPORT_URL/dependency-check-report/dependency-check-report.html)", "short": false}
                 ]
               }
             ]
