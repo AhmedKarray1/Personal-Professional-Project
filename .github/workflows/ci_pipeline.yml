@@ -60,7 +60,7 @@ jobs:
       - name: Send success notification to Slack
         if: success()
         run: |
-          ARTIFACT_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifact_dependency-check-report"
+          RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           curl -X POST -H 'Content-type: application/json' --data '{
             "blocks": [
               {
@@ -94,7 +94,7 @@ jobs:
                       "text": "View Dependency-Check Report",
                       "emoji": true
                     },
-                    "url": "'"$ARTIFACT_URL"'"
+                    "url": "'"$RUN_URL"'"
                   }
                 ]
               }
@@ -104,7 +104,7 @@ jobs:
       - name: Send failure notification to Slack
         if: failure()
         run: |
-          ARTIFACT_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifact_dependency-check-report"
+          RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           curl -X POST -H 'Content-type: application/json' --data '{
             "blocks": [
               {
