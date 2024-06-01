@@ -40,7 +40,9 @@ jobs:
         run: /usr/local/dependency-check/bin/dependency-check.sh --version
 
       - name: Run OWASP Dependency-Check on Android Dependencies
-        run: /usr/local/dependency-check/bin/dependency-check.sh --project "My Project" --scan ./android --format "ALL" --out dependency-check-report
+        run: |
+          mkdir -p dependency-check-report
+          /usr/local/dependency-check/bin/dependency-check.sh --project "My Project" --scan ./android --format "ALL" --out dependency-check-report
 
       - name: Upload Dependency-Check Report
         uses: actions/upload-artifact@v2
@@ -50,12 +52,10 @@ jobs:
 
       - name: Send success notification to Slack
         if: success()
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
-          REPORT_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          REPORT_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           curl -X POST -H 'Content-type: application/json' --data '{
-            "text": "Lint, test, and dependency check successful!",
+            "text": "Lint, test, and OWASP Dependency-Check successful!",
             "attachments": [
               {
                 "color": "good",
@@ -64,32 +64,23 @@ jobs:
                   {"title": "Branch", "value": "${{ github.ref }}", "short": true},
                   {"title": "Commit Message", "value": "${{ github.event.head_commit.message }}", "short": false},
                   {"title": "Commit Author", "value": "${{ github.event.head_commit.author.name }}", "short": true},
-                  {"title": "Job Status", "value": "${{ job.status }}", "short": true},
+                  {"title": "Job Status", "value": "success", "short": true},
                   {"title": "Workflow", "value": "${{ github.workflow }}", "short": true},
                   {"title": "Job", "value": "${{ github.job }}", "short": true},
                   {"title": "Runner OS", "value": "${{ runner.os }}", "short": true},
                   {"title": "Run ID", "value": "${{ github.run_id }}", "short": true},
-                  {"title": "Dependency Check Report", "value": "See attached report", "short": false}
-                ],
-                "actions": [
-                  {
-                    "type": "button",
-                    "text": "Download Report",
-                    "url": "'$REPORT_URL'"
-                  }
+                  {"title": "Report", "value": "[Dependency-Check Report]($REPORT_URL)", "short": false}
                 ]
               }
             ]
-          }' $SLACK_WEBHOOK_URL
+          }' ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Send failure notification to Slack
         if: failure()
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
-          REPORT_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          REPORT_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           curl -X POST -H 'Content-type: application/json' --data '{
-            "text": "Lint, test, or dependency check failed!",
+            "text": "Lint, test, or OWASP Dependency-Check failed!",
             "attachments": [
               {
                 "color": "danger",
@@ -98,20 +89,13 @@ jobs:
                   {"title": "Branch", "value": "${{ github.ref }}", "short": true},
                   {"title": "Commit Message", "value": "${{ github.event.head_commit.message }}", "short": false},
                   {"title": "Commit Author", "value": "${{ github.event.head_commit.author.name }}", "short": true},
-                  {"title": "Job Status", "value": "${{ job.status }}", "short": true},
+                  {"title": "Job Status", "value": "failure", "short": true},
                   {"title": "Workflow", "value": "${{ github.workflow }}", "short": true},
                   {"title": "Job", "value": "${{ github.job }}", "short": true},
                   {"title": "Runner OS", "value": "${{ runner.os }}", "short": true},
                   {"title": "Run ID", "value": "${{ github.run_id }}", "short": true},
-                  {"title": "Dependency Check Report", "value": "See attached report", "short": false}
-                ],
-                "actions": [
-                  {
-                    "type": "button",
-                    "text": "Download Report",
-                    "url": "'$REPORT_URL'"
-                  }
+                  {"title": "Report", "value": "[Dependency-Check Report]($REPORT_URL)", "short": false}
                 ]
               }
             ]
-          }' $SLACK_WEBHOOK_URL
+          }' ${{ secrets.SLACK_WEBHOOK_URL }}
