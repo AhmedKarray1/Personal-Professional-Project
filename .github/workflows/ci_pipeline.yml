@@ -26,6 +26,13 @@ jobs:
       - name: Run Tests
         run: flutter test
 
+      - name: Install Ruby and Bundle Audit
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ruby-full
+          gem install bundler
+          gem install bundle-audit
+
       - name: Install OWASP Dependency-Check
         run: |
           sudo apt-get update
