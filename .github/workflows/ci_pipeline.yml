@@ -29,10 +29,10 @@ jobs:
       - name: Install OWASP Dependency-Check
         run: |
           sudo apt-get update
-          sudo apt-get install -y jq
-          curl -s https://api.github.com/repos/jeremylong/DependencyCheck/releases/latest | jq -r ".assets[] | select(.name | test(\"dependency-check\\-.*\\-release.zip\")) | .browser_download_url" | wget -i -
-          unzip dependency-check-*-release.zip
-          sudo mv dependency-check /usr/local/bin/dependency-check
+          sudo apt-get install -y wget unzip
+          wget https://github.com/jeremylong/DependencyCheck/releases/download/v7.3.2/dependency-check-7.3.2-release.zip
+          unzip dependency-check-7.3.2-release.zip -d dependency-check
+          sudo ln -s $PWD/dependency-check/bin/dependency-check.sh /usr/local/bin/dependency-check
 
       - name: Run OWASP Dependency-Check on Android Dependencies
         run: dependency-check --project "My Project" --scan ./android --format "ALL" --out dependency-check-report
@@ -48,6 +48,7 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
+          REPORT_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           curl -X POST -H 'Content-type: application/json' --data '{
             "text": "Lint, test, and dependency check successful!",
             "attachments": [
@@ -69,7 +70,7 @@ jobs:
                   {
                     "type": "button",
                     "text": "Download Report",
-                    "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                    "url": "'$REPORT_URL'"
                   }
                 ]
               }
@@ -81,6 +82,7 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
+          REPORT_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           curl -X POST -H 'Content-type: application/json' --data '{
             "text": "Lint, test, or dependency check failed!",
             "attachments": [
@@ -102,7 +104,7 @@ jobs:
                   {
                     "type": "button",
                     "text": "Download Report",
-                    "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                    "url": "'$REPORT_URL'"
                   }
                 ]
               }
