@@ -30,8 +30,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y ruby-full
-          gem install bundler
-          gem install bundle-audit
+          sudo gem install bundler
+          sudo gem install bundle-audit
 
       - name: Install OWASP Dependency-Check
         run: |
