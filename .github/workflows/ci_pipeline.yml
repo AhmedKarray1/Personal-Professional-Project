@@ -1,9 +1,9 @@
 name: CI/CD
 
 on:
-  pull_request:
+  push:
     branches:
-      - main
+      - '**'
 
 jobs:
   lint:
@@ -45,6 +45,8 @@ jobs:
 
       - name: Send success notification to Slack
         if: success()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
           curl -X POST -H 'Content-type: application/json' --data '{
             "text": "Lint, test, and dependency check successful!",
@@ -54,7 +56,6 @@ jobs:
                 "fields": [
                   {"title": "Repository", "value": "${{ github.repository }}", "short": true},
                   {"title": "Branch", "value": "${{ github.ref }}", "short": true},
-                  {"title": "Pull Request", "value": "${{ github.event.pull_request.title }}", "short": false},
                   {"title": "Commit Message", "value": "${{ github.event.head_commit.message }}", "short": false},
                   {"title": "Commit Author", "value": "${{ github.event.head_commit.author.name }}", "short": true},
                   {"title": "Job Status", "value": "${{ job.status }}", "short": true},
@@ -68,15 +69,17 @@ jobs:
                   {
                     "type": "button",
                     "text": "Download Report",
-                    "url": "${{ github.server_url }}/${{ github.repository }}/suites/${{ github.run_id }}/artifacts"
+                    "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
                   }
                 ]
               }
             ]
-          }' ${{ secrets.SLACK_WEBHOOK_URL }}
+          }' $SLACK_WEBHOOK_URL
 
       - name: Send failure notification to Slack
         if: failure()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
           curl -X POST -H 'Content-type: application/json' --data '{
             "text": "Lint, test, or dependency check failed!",
@@ -86,7 +89,6 @@ jobs:
                 "fields": [
                   {"title": "Repository", "value": "${{ github.repository }}", "short": true},
                   {"title": "Branch", "value": "${{ github.ref }}", "short": true},
-                  {"title": "Pull Request", "value": "${{ github.event.pull_request.title }}", "short": false},
                   {"title": "Commit Message", "value": "${{ github.event.head_commit.message }}", "short": false},
                   {"title": "Commit Author", "value": "${{ github.event.head_commit.author.name }}", "short": true},
                   {"title": "Job Status", "value": "${{ job.status }}", "short": true},
@@ -100,9 +102,9 @@ jobs:
                   {
                     "type": "button",
                     "text": "Download Report",
-                    "url": "${{ github.server_url }}/${{ github.repository }}/suites/${{ github.run_id }}/artifacts"
+                    "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
                   }
                 ]
               }
             ]
-          }' ${{ secrets.SLACK_WEBHOOK_URL }}
+          }' $SLACK_WEBHOOK_URL
