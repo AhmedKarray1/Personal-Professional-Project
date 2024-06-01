@@ -7,7 +7,7 @@ on:
 
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - uses: actions/checkout@v2
@@ -56,6 +56,11 @@ jobs:
         with:
           name: dependency-check-report
           path: dependency-check-report
+
+      - name: Start Prometheus and Grafana
+        run: |
+          docker run -d --name prometheus -p 9090:9090 -v ${{ github.workspace }}/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
+          docker run -d --name grafana -p 3100:3000 grafana/grafana
 
       - name: Send success notification to Slack
         if: success()
@@ -130,3 +135,11 @@ jobs:
               }
             ]
           }' ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Stop Prometheus and Grafana
+        if: always()
+        run: |
+          docker stop prometheus
+          docker stop grafana
+          docker rm prometheus
+          docker rm grafana
