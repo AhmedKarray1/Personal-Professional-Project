@@ -17,14 +17,9 @@ jobs:
         with:
           node-version: '14'
 
-      - name: Install Node.js dependencies
-        run: |
-          cd metrics-server
-          npm install
-
       - name: Start Metrics Server
         run: |
-          cd metrics-server
+          cd ../metrics-server
           nohup node server.js &
 
       - name: Set up Flutter
