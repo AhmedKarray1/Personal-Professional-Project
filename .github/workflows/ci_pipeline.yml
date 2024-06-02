@@ -19,7 +19,7 @@ jobs:
 
       - name: Start Metrics Server
         run: |
-          cd /home/pppvm/ppp/actions-runner/metrics-server
+          cd /home/pppvm/ppp/metrics-server
           nohup node server.js &
 
       - name: Set up Flutter
