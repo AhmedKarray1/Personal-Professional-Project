@@ -66,25 +66,11 @@ jobs:
       - name: Run Tests
         run: flutter test --coverage
 
-      - name: Code Coverage Report
-        uses: actions/github-script@v3
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v2
         with:
-          script: |
-            const fs = require('fs');
-            const content = fs.readFileSync('coverage/lcov.info', 'utf8');
-            return github.rest.checks.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              name: 'Coverage Report',
-              head_sha: context.sha,
-              status: 'completed',
-              conclusion: 'success',
-              output: {
-                title: 'Coverage Report',
-                summary: 'The test coverage is as follows:',
-                text: content,
-              },
-            });
+          name: coverage-report
+          path: coverage/lcov.info
 
       - name: Build
         run: flutter build apk --release
@@ -102,7 +88,7 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
-          COVERAGE=$(cat coverage/lcov.info)
+          COVERAGE=$(cat coverage/lcov.info | base64)
           curl -X POST -H 'Content-type: application/json' --data '{
             "text": "Deployment successful!",
             "attachments": [
@@ -117,10 +103,12 @@ jobs:
                   {"title": "Workflow", "value": "${{ github.workflow }}", "short": true},
                   {"title": "Job", "value": "${{ github.job }}", "short": true},
                   {"title": "Runner OS", "value": "${{ runner.os }}", "short": true},
-                  {"title": "Run ID", "value": "${{ github.run_id }}", "short": true},
-                  {"title": "Coverage Report", "value": "$COVERAGE", "short": false}
+                  {"title": "Run ID", "value": "${{ github.run_id }}", "short": true}
                 ],
-                "image_url": "https://img.shields.io/badge/deployment-success-brightgreen"
+                "image_url": "https://img.shields.io/badge/deployment-success-brightgreen",
+                "title": "Coverage Report",
+                "text": "The test coverage report is attached.",
+                "mrkdwn_in": ["text"]
               }
             ]
           }' $SLACK_WEBHOOK_URL
