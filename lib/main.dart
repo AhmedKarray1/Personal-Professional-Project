@@ -46,7 +46,7 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         body: Container(
           decoration: const BoxDecoration(
-            color: Color.fromARGB(255, 64, 11, 113),
+            color: Color.fromARGB(254, 64, 11, 113),
           ),
           child: activeScreen == "home-screen"
               ? HomeScreen(switchScreen)
