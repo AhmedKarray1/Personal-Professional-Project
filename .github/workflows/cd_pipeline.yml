@@ -50,19 +50,19 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y python3-pip
           pip install git+https://github.com/ClaudiuGeorgiu/Obfuscapk.git
-          echo "$(python3 -m site --user-base)/bin" >> $GITHUB_ENV
-          echo 'export PATH=$PATH:$(python3 -m site --user-base)/bin' >> $GITHUB_ENV
+          echo "PATH=$PATH:$(python3 -m site --user-base)/bin" >> $GITHUB_ENV
 
       - name: Verify Obfuscapk Installation
-        run: |
-          source $GITHUB_ENV
-          obfuscapk --version
+        run: obfuscapk --version
+        env:
+          PATH: ${{ steps.install.outputs.PATH }}
 
       - name: Obfuscate APK
         run: |
-          source $GITHUB_ENV
           mkdir -p obfuscation-output
           obfuscapk -o obfuscation-output build/app/outputs/flutter-apk/app-release.apk
+        env:
+          PATH: ${{ steps.install.outputs.PATH }}
 
       - name: Upload Obfuscated APK
         uses: actions/upload-artifact@v2
