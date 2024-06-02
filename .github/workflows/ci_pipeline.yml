@@ -12,6 +12,21 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install Node.js dependencies
+        run: |
+          cd metrics-server
+          npm install
+
+      - name: Start Metrics Server
+        run: |
+          cd metrics-server
+          nohup node server.js &
+
       - name: Set up Flutter
         uses: subosito/flutter-action@v1
         with:
@@ -30,7 +45,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y ruby-full
-          sudo gem install bundler
+          sudo gem install bundler -v 2.4.22
           sudo gem install bundle-audit
 
       - name: Install OWASP Dependency-Check
@@ -56,11 +71,6 @@ jobs:
         with:
           name: dependency-check-report
           path: dependency-check-report
-
-      - name: Start Prometheus and Grafana
-        run: |
-          docker run -d --name prometheus -p 9090:9090 -v ${{ github.workspace }}/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
-          docker run -d --name grafana -p 3100:3000 grafana/grafana
 
       - name: Send success notification to Slack
         if: success()
@@ -135,11 +145,3 @@ jobs:
               }
             ]
           }' ${{ secrets.SLACK_WEBHOOK_URL }}
-
-      - name: Stop Prometheus and Grafana
-        if: always()
-        run: |
-          docker stop prometheus
-          docker stop grafana
-          docker rm prometheus
-          docker rm grafana
