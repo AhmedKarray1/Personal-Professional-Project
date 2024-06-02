@@ -12,6 +12,27 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pub-cache
+            ${{ github.workspace }}/.flutter-plugins
+            ${{ github.workspace }}/.flutter-plugins-dependencies
+          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
       - name: Set up Flutter
         uses: subosito/flutter-action@v1
         with:
@@ -21,6 +42,14 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.3"
+
+      - name: Cache Bundler dependencies
+        uses: actions/cache@v3
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-bundler-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bundler-
 
       - name: Setup Fastlane
         run: |
@@ -36,11 +65,6 @@ jobs:
 
       - name: Run Tests
         run: flutter test
-
-      - name: Set Kotlin version
-        run: |
-          echo "ext.kotlin_version = '1.6.10'" >> android/build.gradle
-          echo "classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10'" >> android/build.gradle
 
       - name: Build
         run: flutter build apk
