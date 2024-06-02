@@ -75,9 +75,7 @@ jobs:
           python-version: '3.x'
 
       - name: Install Git
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y git
+        run: sudo apt-get install -y git
 
       - name: Install Obfuscapk
         run: |
