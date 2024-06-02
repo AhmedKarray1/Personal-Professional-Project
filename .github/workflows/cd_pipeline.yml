@@ -79,22 +79,24 @@ jobs:
 
       - name: Install Obfuscapk
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install git+https://github.com/ClaudiuGeorgiu/Obfuscapk.git
+          sudo apt-get update
+          sudo apt-get install -y python3 python3-pip
+          pip install --upgrade pip
+          pip install git+https://github.com/ClaudiuGeorgiu/Obfuscapk.git
         env:
-          PATH: /usr/bin:/home/runner/.local/bin:$PATH
+          PATH: /usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:$HOME/.local/bin
 
       - name: Verify Obfuscapk Installation
         run: obfuscapk --version
         env:
-          PATH: /usr/bin:/home/runner/.local/bin:$PATH
+          PATH: /usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:$HOME/.local/bin
 
       - name: Obfuscate APK
         run: |
           mkdir -p obfuscation-output
           obfuscapk -o obfuscation-output build/app/outputs/flutter-apk/app-release.apk
         env:
-          PATH: /usr/bin:/home/runner/.local/bin:$PATH
+          PATH: /usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:$HOME/.local/bin
 
       - name: Deploy with Fastlane
         run: |
