@@ -40,35 +40,20 @@ jobs:
       - name: Build
         run: flutter build apk
 
-      - name: Install Python 3.8
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.8'
-
-      - name: Install Obfuscapk
+      - name: Install Python and Obfuscapk
         run: |
           sudo apt-get update
-          sudo apt-get install -y python3-pip
+          sudo apt-get install -y python3 python3-pip
+          pip install --upgrade pip
           pip install git+https://github.com/ClaudiuGeorgiu/Obfuscapk.git
-          echo "PATH=$PATH:$(python3 -m site --user-base)/bin" >> $GITHUB_ENV
-
-      - name: Verify Obfuscapk Installation
-        run: obfuscapk --version
         env:
-          PATH: ${{ steps.install.outputs.PATH }}
+          PATH: /home/runner/.local/bin:$PATH
 
       - name: Obfuscate APK
         run: |
           mkdir -p obfuscation-output
+          export PATH="$HOME/.local/bin:$PATH"
           obfuscapk -o obfuscation-output build/app/outputs/flutter-apk/app-release.apk
-        env:
-          PATH: ${{ steps.install.outputs.PATH }}
-
-      - name: Upload Obfuscated APK
-        uses: actions/upload-artifact@v2
-        with:
-          name: obfuscated-apk
-          path: obfuscation-output
 
       - name: Deploy with Fastlane
         run: |
@@ -84,7 +69,7 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
           curl -X POST -H 'Content-type: application/json' --data '{
-            "text": "Deployment and obfuscation successful!",
+            "text": "Deployment successful!",
             "attachments": [
               {
                 "color": "good",
@@ -97,8 +82,7 @@ jobs:
                   {"title": "Workflow", "value": "${{ github.workflow }}", "short": true},
                   {"title": "Job", "value": "${{ github.job }}", "short": true},
                   {"title": "Runner OS", "value": "${{ runner.os }}", "short": true},
-                  {"title": "Run ID", "value": "${{ github.run_id }}", "short": true},
-                  {"title": "Obfuscated APK", "value": "[Download Obfuscated APK](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts)", "short": false}
+                  {"title": "Run ID", "value": "${{ github.run_id }}", "short": true}
                 ]
               }
             ]
@@ -110,7 +94,7 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
           curl -X POST -H 'Content-type: application/json' --data '{
-            "text": "Deployment or obfuscation failed!",
+            "text": "Deployment failed!",
             "attachments": [
               {
                 "color": "danger",
