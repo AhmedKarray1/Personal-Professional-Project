@@ -84,12 +84,17 @@ jobs:
         env:
           PATH: /usr/bin:/home/runner/.local/bin:$PATH
 
+      - name: Verify Obfuscapk Installation
+        run: obfuscapk --version
+        env:
+          PATH: /usr/bin:/home/runner/.local/bin:$PATH
+
       - name: Obfuscate APK
         run: |
-          echo "PATH=\$PATH:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin" >> $GITHUB_ENV
-          source $GITHUB_ENV
           mkdir -p obfuscation-output
           obfuscapk -o obfuscation-output build/app/outputs/flutter-apk/app-release.apk
+        env:
+          PATH: /usr/bin:/home/runner/.local/bin:$PATH
 
       - name: Deploy with Fastlane
         run: |
