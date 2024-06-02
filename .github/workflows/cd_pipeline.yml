@@ -12,27 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Cache Flutter dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.pub-cache
-            ${{ github.workspace }}/.flutter-plugins
-            ${{ github.workspace }}/.flutter-plugins-dependencies
-          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-flutter-
-
-      - name: Cache Gradle dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
       - name: Set up Flutter
         uses: subosito/flutter-action@v1
         with:
@@ -42,14 +21,6 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.3"
-
-      - name: Cache Bundler dependencies
-        uses: actions/cache@v3
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-bundler-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-bundler-
 
       - name: Setup Fastlane
         run: |
@@ -64,16 +35,10 @@ jobs:
         run: flutter analyze
 
       - name: Run Tests
-        run: flutter test --coverage
-
-      - name: Upload Coverage Report
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage-report
-          path: coverage/lcov.info
+        run: flutter test
 
       - name: Build
-        run: flutter build apk --release
+        run: flutter build apk
 
       - name: Deploy with Fastlane
         run: |
@@ -88,7 +53,6 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
-          COVERAGE=$(cat coverage/lcov.info | base64)
           curl -X POST -H 'Content-type: application/json' --data '{
             "text": "Deployment successful!",
             "attachments": [
@@ -99,16 +63,12 @@ jobs:
                   {"title": "Branch", "value": "${{ github.ref }}", "short": true},
                   {"title": "Commit Message", "value": "${{ github.event.head_commit.message }}", "short": false},
                   {"title": "Commit Author", "value": "${{ github.event.head_commit.author.name }}", "short": true},
-                  {"title": "Job Status", "value": "success", "short": true},
+                  {"title": "Job Status", "value": "${{ job.status }}", "short": true},
                   {"title": "Workflow", "value": "${{ github.workflow }}", "short": true},
                   {"title": "Job", "value": "${{ github.job }}", "short": true},
                   {"title": "Runner OS", "value": "${{ runner.os }}", "short": true},
                   {"title": "Run ID", "value": "${{ github.run_id }}", "short": true}
-                ],
-                "image_url": "https://img.shields.io/badge/deployment-success-brightgreen",
-                "title": "Coverage Report",
-                "text": "The test coverage report is attached.",
-                "mrkdwn_in": ["text"]
+                ]
               }
             ]
           }' $SLACK_WEBHOOK_URL
@@ -128,13 +88,12 @@ jobs:
                   {"title": "Branch", "value": "${{ github.ref }}", "short": true},
                   {"title": "Commit Message", "value": "${{ github.event.head_commit.message }}", "short": false},
                   {"title": "Commit Author", "value": "${{ github.event.head_commit.author.name }}", "short": true},
-                  {"title": "Job Status", "value": "failure", "short": true},
+                  {"title": "Job Status", "value": "${{ job.status }}", "short": true},
                   {"title": "Workflow", "value": "${{ github.workflow }}", "short": true},
                   {"title": "Job", "value": "${{ github.job }}", "short": true},
                   {"title": "Runner OS", "value": "${{ runner.os }}", "short": true},
                   {"title": "Run ID", "value": "${{ github.run_id }}", "short": true}
-                ],
-                "image_url": "https://img.shields.io/badge/deployment-failure-red"
+                ]
               }
             ]
           }' $SLACK_WEBHOOK_URL
