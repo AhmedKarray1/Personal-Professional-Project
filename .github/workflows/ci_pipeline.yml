@@ -36,6 +36,14 @@ jobs:
       - name: Run Tests
         run: flutter test
 
+      - name: Install Java
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openjdk-11-jdk
+          echo "JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64" | sudo tee -a /etc/environment
+          echo "PATH=$JAVA_HOME/bin:$PATH" | sudo tee -a /etc/environment
+          source /etc/environment
+
       - name: Install Ruby and Bundle Audit
         run: |
           sudo apt-get update
