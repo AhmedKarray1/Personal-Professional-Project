@@ -42,8 +42,8 @@ jobs:
 
       - name: Install Python and Obfuscapk
         run: |
-          sudo apt-get update
-          sudo apt-get install -y python3 python3-pip
+          apt-get update
+          apt-get install -y python3 python3-pip
           pip install --upgrade pip
           pip install git+https://github.com/ClaudiuGeorgiu/Obfuscapk.git
         env:
