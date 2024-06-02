@@ -50,6 +50,11 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y python3-pip
           pip install git+https://github.com/ClaudiuGeorgiu/Obfuscapk.git
+          echo "$(python3 -m site --user-base)/bin" >> $GITHUB_PATH
+
+      - name: Verify Obfuscapk Installation
+        run: |
+          obfuscapk --version
 
       - name: Obfuscate APK
         run: |
