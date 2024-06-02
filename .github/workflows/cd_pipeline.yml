@@ -64,7 +64,27 @@ jobs:
         run: flutter analyze
 
       - name: Run Tests
-        run: flutter test
+        run: flutter test --coverage
+
+      - name: Code Coverage Report
+        uses: actions/github-script@v3
+        with:
+          script: |
+            const fs = require('fs');
+            const content = fs.readFileSync('coverage/lcov.info', 'utf8');
+            return github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: 'Coverage Report',
+              head_sha: context.sha,
+              status: 'completed',
+              conclusion: 'success',
+              output: {
+                title: 'Coverage Report',
+                summary: 'The test coverage is as follows:',
+                text: content,
+              },
+            });
 
       - name: Build
         run: flutter build apk --release
@@ -82,6 +102,7 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
+          COVERAGE=$(cat coverage/lcov.info)
           curl -X POST -H 'Content-type: application/json' --data '{
             "text": "Deployment successful!",
             "attachments": [
@@ -96,8 +117,10 @@ jobs:
                   {"title": "Workflow", "value": "${{ github.workflow }}", "short": true},
                   {"title": "Job", "value": "${{ github.job }}", "short": true},
                   {"title": "Runner OS", "value": "${{ runner.os }}", "short": true},
-                  {"title": "Run ID", "value": "${{ github.run_id }}", "short": true}
-                ]
+                  {"title": "Run ID", "value": "${{ github.run_id }}", "short": true},
+                  {"title": "Coverage Report", "value": "$COVERAGE", "short": false}
+                ],
+                "image_url": "https://img.shields.io/badge/deployment-success-brightgreen"
               }
             ]
           }' $SLACK_WEBHOOK_URL
@@ -122,7 +145,8 @@ jobs:
                   {"title": "Job", "value": "${{ github.job }}", "short": true},
                   {"title": "Runner OS", "value": "${{ runner.os }}", "short": true},
                   {"title": "Run ID", "value": "${{ github.run_id }}", "short": true}
-                ]
+                ],
+                "image_url": "https://img.shields.io/badge/deployment-failure-red"
               }
             ]
           }' $SLACK_WEBHOOK_URL
