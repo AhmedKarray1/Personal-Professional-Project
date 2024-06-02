@@ -37,6 +37,11 @@ jobs:
       - name: Run Tests
         run: flutter test
 
+      - name: Set Kotlin version
+        run: |
+          echo "ext.kotlin_version = '1.6.10'" >> android/build.gradle
+          echo "classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10'" >> android/build.gradle
+
       - name: Build
         run: flutter build apk
 
@@ -46,10 +51,10 @@ jobs:
           python-version: '3.x'
 
       - name: Install Git
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-          
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git
+
       - name: Install Obfuscapk
         run: |
           python -m pip install --upgrade pip
