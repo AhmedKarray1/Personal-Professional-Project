@@ -31,26 +31,6 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Bump version
-        id: bump_version
-        run: |
-          # Extract the current version
-          current_version=$(grep '^version:' pubspec.yaml | awk '{print $2}')
-          # Split version into major, minor, patch, and build number
-          IFS='+-.' read -r major minor patch build <<< "${current_version}"
-          # Increment the build number
-          build=$((build + 1))
-          # Form the new version string
-          new_version="${major}.${minor}.${patch}+${build}"
-          # Replace the version in pubspec.yaml
-          sed -i "s/^version: .*/version: ${new_version}/" pubspec.yaml
-          # Commit the changes
-          git config --global user.name 'github-actions'
-          git config --global user.email 'github-actions@github.com'
-          git add pubspec.yaml
-          git commit -m "Bump version to ${new_version}"
-          echo "new_version=${new_version}" >> $GITHUB_ENV
-
       - name: Run Linter
         run: flutter analyze
 
