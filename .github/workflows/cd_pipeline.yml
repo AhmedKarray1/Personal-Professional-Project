@@ -67,35 +67,7 @@ jobs:
         run: flutter test
 
       - name: Build
-        run: flutter build apk
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
-
-      - name: Install Git
-        run: sudo apt-get install -y git
-
-      - name: Install Obfuscapk
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y python3 python3-pip
-          pip install --upgrade pip
-          pip install git+https://github.com/ClaudiuGeorgiu/Obfuscapk.git
-          echo "PATH=$PATH:$HOME/.local/bin" >> $GITHUB_ENV
-
-      - name: Verify Obfuscapk Installation
-        run: obfuscapk --version
-        env:
-          PATH: /usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:$HOME/.local/bin
-
-      - name: Obfuscate APK
-        run: |
-          mkdir -p obfuscation-output
-          obfuscapk -o obfuscation-output build/app/outputs/flutter-apk/app-release.apk
-        env:
-          PATH: /usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:$HOME/.local/bin
+        run: flutter build apk --release
 
       - name: Deploy with Fastlane
         run: |
