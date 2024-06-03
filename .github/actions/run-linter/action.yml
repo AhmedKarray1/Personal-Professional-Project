@@ -1,0 +1,9 @@
+name: Run Linter
+
+description: Run Flutter linter
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run Linter
+      run: flutter analyze

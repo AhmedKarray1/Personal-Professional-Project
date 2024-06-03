@@ -1,0 +1,17 @@
+name: Install OWASP Dependency-Check
+
+description: Install OWASP Dependency-Check
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install OWASP Dependency-Check
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y wget unzip
+        wget https://github.com/jeremylong/DependencyCheck/releases/download/v7.3.2/dependency-check-7.3.2-release.zip
+        unzip dependency-check-7.3.2-release.zip -d dependency-check
+        sudo rm -rf /usr/local/dependency-check  # Remove existing directory if it exists
+        sudo mv dependency-check/dependency-check /usr/local/dependency-check
+        sudo chmod +x /usr/local/dependency-check/bin/dependency-check.sh
+        echo "/usr/local/dependency-check/bin" >> $GITHUB_PATH
