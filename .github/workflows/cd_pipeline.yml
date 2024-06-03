@@ -23,19 +23,17 @@ jobs:
           mkdir -p $HOME/runner_temp
           mkdir -p $HOME/runner_workspace
           sudo chown -R $USER:$USER $HOME/.gem $HOME/runner_temp $HOME/runner_workspace
-        shell: bash
-
-      - name: Set Environment Variables
-        run: |
           echo 'export GEM_HOME="$HOME/.gem"' >> $HOME/.bashrc
           echo 'export GEM_PATH="$HOME/.gem"' >> $HOME/.bashrc
           echo 'export PATH="$HOME/.gem/bin:$PATH"' >> $HOME/.bashrc
+          echo 'export ANDROID_HOME=$HOME/Android/Sdk' >> $HOME/.bashrc
+          echo 'export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin' >> $HOME/.bashrc
+          echo 'export PATH=$PATH:$ANDROID_HOME/platform-tools' >> $HOME/.bashrc
           source $HOME/.bashrc
         shell: bash
 
       - name: Install Bundler
-        run: |
-          gem install bundler -v 2.4.22
+        run: gem install bundler -v 2.4.22
         env:
           GEM_HOME: $HOME/.gem
           GEM_PATH: $HOME/.gem
@@ -44,8 +42,9 @@ jobs:
       - name: Setup Fastlane
         run: |
           cd android
+          bundle init
+          echo 'gem "fastlane"' >> Gemfile
           bundle install
-          cd ../..
         env:
           GEM_HOME: $HOME/.gem
           GEM_PATH: $HOME/.gem
@@ -67,7 +66,7 @@ jobs:
       - name: Deploy with Fastlane
         run: |
           cd android
-          fastlane deploy_to_firebase
+          bundle exec fastlane deploy_to_firebase
         env:
           FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
