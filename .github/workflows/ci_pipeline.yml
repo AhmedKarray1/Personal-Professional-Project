@@ -11,17 +11,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-
-      - name: Start Metrics Server
-        run: |
-          cd /home/pppvm/ppp/metrics-server
-          nohup node server.js &
-
+      
       - name: Set up Flutter
         uses: subosito/flutter-action@v1
         with:
