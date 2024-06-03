@@ -1,0 +1,43 @@
+name: Notify Slack
+
+description: Send a notification to Slack
+
+inputs:
+  status:
+    description: "Job status (success or failure)"
+    required: true
+  color:
+    description: "Color of the notification"
+    required: true
+  text:
+    description: "Notification text"
+    required: true
+  slack-webhook-url:
+    description: "Slack Webhook URL"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Send notification to Slack
+      run: |
+        curl -X POST -H 'Content-type: application/json' --data '{
+          "text": "${{ inputs.text }}",
+          "attachments": [
+            {
+              "color": "${{ inputs.color }}",
+              "fields": [
+                {"title": "Repository", "value": "${{ github.repository }}", "short": true},
+                {"title": "Branch", "value": "${{ github.ref }}", "short": true},
+                {"title": "Commit Message", "value": "${{ github.event.head_commit.message }}", "short": false},
+                {"title": "Commit Author", "value": "${{ github.event.head_commit.author.name }}", "short": true},
+                {"title": "Job Status", "value": "${{ inputs.status }}", "short": true},
+                {"title": "Workflow", "value": "${{ github.workflow }}", "short": true},
+                {"title": "Job", "value": "${{ github.job }}", "short": true},
+                {"title": "Runner OS", "value": "${{ runner.os }}", "short": true},
+                {"title": "Run ID", "value": "${{ github.run_id }}", "short": true}
+              ]
+            }
+          ]
+        }' "${{ inputs.slack-webhook-url }}"
+      shell: bash

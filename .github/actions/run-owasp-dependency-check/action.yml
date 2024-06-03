@@ -1,0 +1,18 @@
+name: Run OWASP Dependency-Check
+
+description: Run OWASP Dependency-Check on Android dependencies
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run OWASP Dependency-Check on Android Dependencies
+      run: |
+        mkdir -p dependency-check-report
+        /usr/local/dependency-check/bin/dependency-check.sh --project "My Project" --scan ./android --format "ALL" --out dependency-check-report
+      shell: bash
+
+    - name: Upload Dependency-Check Report
+      uses: actions/upload-artifact@v2
+      with:
+        name: dependency-check-report
+        path: dependency-check-report

@@ -1,75 +1,63 @@
-name: CI/CD
+name: CI Pipeline
 
 on:
-  pull_request:
+  push:
     branches:
-      - main
+      - "**"
 
 jobs:
-  CI_PIPELINE:
-    runs-on: ubuntu-latest
+  lint:
+    runs-on: self-hosted
 
     steps:
       - uses: actions/checkout@v2
 
       - name: Set up Flutter
-        uses: subosito/flutter-action@v1
+        uses: ./.github/actions/setup-flutter
         with:
           flutter-version: "3.19.6"
 
       - name: Install dependencies
-        run: flutter pub get
+        uses: ./.github/actions/install-dependencies
 
       - name: Run Linter
-        run: flutter analyze
+        uses: ./.github/actions/run-linter
 
       - name: Run Tests
-        run: flutter test
+        uses: ./.github/actions/run-tests
+
+      - name: Install Ruby and Bundle Audit
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ruby-full
+          sudo gem install bundler -v 2.4.22
+          sudo gem install bundle-audit
+        shell: bash
+
+      - name: Install OWASP Dependency-Check
+        uses: ./.github/actions/install-owasp-dependency-check
+
+      - name: Verify OWASP Dependency-Check Installation
+        run: /usr/local/dependency-check/bin/dependency-check.sh --version
+        shell: bash
+
+      - name: Run OWASP Dependency-Check
+        uses: ./.github/actions/run-owasp-dependency-check
 
       - name: Send success notification to Slack
         if: success()
-        run: |
-          curl -X POST -H 'Content-type: application/json' --data '{
-            "text": "Lint and test successful!",
-            "attachments": [
-              {
-                "color": "good",
-                "fields": [
-                  {"title": "Repository", "value": "${{ github.repository }}", "short": true},
-                  {"title": "Branch", "value": "${{ github.ref }}", "short": true},
-                  {"title": "Pull Request", "value": "${{ github.event.pull_request.title }}", "short": false},
-                  {"title": "Commit Message", "value": "${{ github.event.head_commit.message }}", "short": false},
-                  {"title": "Commit Author", "value": "${{ github.event.head_commit.author.name }}", "short": true},
-                  {"title": "Job Status", "value": "${{ job.status }}", "short": true},
-                  {"title": "Workflow", "value": "${{ github.workflow }}", "short": true},
-                  {"title": "Job", "value": "${{ github.job }}", "short": true},
-                  {"title": "Runner OS", "value": "${{ runner.os }}", "short": true},
-                  {"title": "Run ID", "value": "${{ github.run_id }}", "short": true}
-                ]
-              }
-            ]
-          }' ${{ secrets.SLACK_WEBHOOK_URL }}
+        uses: ./.github/actions/notify-slack
+        with:
+          status: "Success"
+          color: "good"
+          text: "Lint, test, and OWASP Dependency-Check successful!"
+          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Send failure notification to Slack
         if: failure()
-        run: |
-          curl -X POST -H 'Content-type: application/json' --data '{
-            "text": "Lint and test failed!",
-            "attachments": [
-              {
-                "color": "danger",
-                "fields": [
-                  {"title": "Repository", "value": "${{ github.repository }}", "short": true},
-                  {"title": "Branch", "value": "${{ github.ref }}", "short": true},
-                  {"title": "Pull Request", "value": "${{ github.event.pull_request.title }}", "short": false},
-                  {"title": "Commit Message", "value": "${{ github.event.head_commit.message }}", "short": false},
-                  {"title": "Commit Author", "value": "${{ github.event.head_commit.author.name }}", "short": true},
-                  {"title": "Job Status", "value": "${{ job.status }}", "short": true},
-                  {"title": "Workflow", "value": "${{ github.workflow }}", "short": true},
-                  {"title": "Job", "value": "${{ github.job }}", "short": true},
-                  {"title": "Runner OS", "value": "${{ runner.os }}", "short": true},
-                  {"title": "Run ID", "value": "${{ github.run_id }}", "short": true}
-                ]
-              }
-            ]
-          }' ${{ secrets.SLACK_WEBHOOK_URL }}
+        uses: ./.github/actions/notify-slack
+        with:
+          status: "Failure"
+          color: "danger"
+          text: "Lint, test, or OWASP Dependency-Check failed!"
+          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}

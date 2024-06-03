@@ -1,0 +1,10 @@
+name: Run Tests
+
+description: Run Flutter tests
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run Tests
+      run: flutter test
+      shell: bash
