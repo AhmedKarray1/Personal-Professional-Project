@@ -20,22 +20,26 @@ jobs:
       - name: Prepare Ruby Environment
         run: |
           mkdir -p ~/ruby-tools
-          chmod -R 777 ~/ruby-tools
           mkdir -p ~/runner_temp
-          chmod -R 777 ~/runner_temp
           mkdir -p ~/runner_workspace
-          chmod -R 777 ~/runner_workspace
+          sudo chown -R $USER:$USER ~/ruby-tools ~/runner_temp ~/runner_workspace
         shell: bash
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.3"
-          bundler-cache: true
-        env:
-          RUNNER_TOOL_CACHE: ~/ruby-tools
-          RUNNER_TEMP: ~/runner_temp
-          RUNNER_WORKSPACE: ~/runner_workspace
+      - name: Install Ruby dependencies
+        run: sudo apt-get install -y autoconf automake bison libffi-dev libgdbm-dev libncurses5-dev libsqlite3-dev libtool libyaml-dev pkg-config sqlite3
+        shell: bash
+
+      - name: Install Ruby using RVM
+        run: |
+          curl -sSL https://get.rvm.io | bash -s stable
+          source ~/.rvm/scripts/rvm
+          rvm install 3.1.2
+          rvm use 3.1.2 --default
+        shell: bash
+
+      - name: Install Bundler
+        run: gem install bundler -v 2.4.22
+        shell: bash
 
       - name: Setup Fastlane
         run: |
