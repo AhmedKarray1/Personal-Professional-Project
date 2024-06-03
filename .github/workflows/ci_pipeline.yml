@@ -51,6 +51,7 @@ jobs:
           status: "Success"
           color: "good"
           text: "Lint, test, and OWASP Dependency-Check successful!"
+          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Send failure notification to Slack
         if: failure()
@@ -59,3 +60,4 @@ jobs:
           status: "Failure"
           color: "danger"
           text: "Lint, test, or OWASP Dependency-Check failed!"
+          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}

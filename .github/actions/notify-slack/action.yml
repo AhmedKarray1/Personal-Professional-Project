@@ -12,6 +12,9 @@ inputs:
   text:
     description: "Notification text"
     required: true
+  slack-webhook-url:
+    description: "Slack Webhook URL"
+    required: true
 
 runs:
   using: "composite"
@@ -36,5 +39,5 @@ runs:
               ]
             }
           ]
-        }' ${{ secrets.SLACK_WEBHOOK_URL }}
+        }' "${{ inputs.slack-webhook-url }}"
       shell: bash
