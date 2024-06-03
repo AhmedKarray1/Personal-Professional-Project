@@ -24,7 +24,7 @@ class _MyAppState extends State<MyApp> {
   List<String> selectedAnswers = [];
   var activeScreen = "home-screen";
 
-  switchScreen(String screen) {
+  void switchScreen(String screen) {
     setState(() {
       activeScreen = screen;
       if (screen == "home-screen") selectedAnswers = [];
