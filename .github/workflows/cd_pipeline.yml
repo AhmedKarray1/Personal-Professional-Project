@@ -19,18 +19,26 @@ jobs:
 
       - name: Prepare Environment
         run: |
-          mkdir -p ~/.gem
-          mkdir -p ~/runner_temp
-          mkdir -p ~/runner_workspace
-          sudo chown -R $USER:$USER ~/.gem ~/runner_temp ~/runner_workspace
+          mkdir -p $HOME/.gem
+          mkdir -p $HOME/runner_temp
+          mkdir -p $HOME/runner_workspace
+          sudo chown -R $USER:$USER $HOME/.gem $HOME/runner_temp $HOME/runner_workspace
+        shell: bash
+
+      - name: Set Environment Variables
+        run: |
+          echo 'export GEM_HOME="$HOME/.gem"' >> $HOME/.bashrc
+          echo 'export GEM_PATH="$HOME/.gem"' >> $HOME/.bashrc
+          echo 'export PATH="$HOME/.gem/bin:$PATH"' >> $HOME/.bashrc
+          source $HOME/.bashrc
         shell: bash
 
       - name: Install Bundler
         run: |
           gem install bundler -v 2.4.22
         env:
-          GEM_HOME: ~/.gem
-          GEM_PATH: ~/.gem
+          GEM_HOME: $HOME/.gem
+          GEM_PATH: $HOME/.gem
         shell: bash
 
       - name: Setup Fastlane
@@ -39,8 +47,8 @@ jobs:
           bundle install
           cd ../..
         env:
-          GEM_HOME: ~/.gem
-          GEM_PATH: ~/.gem
+          GEM_HOME: $HOME/.gem
+          GEM_PATH: $HOME/.gem
         shell: bash
 
       - name: Install dependencies
@@ -63,8 +71,8 @@ jobs:
         env:
           FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
-          GEM_HOME: ~/.gem
-          GEM_PATH: ~/.gem
+          GEM_HOME: $HOME/.gem
+          GEM_PATH: $HOME/.gem
         shell: bash
 
       - name: Send success notification to Slack
