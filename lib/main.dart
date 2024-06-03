@@ -31,7 +31,7 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  chooseAnswer(String answer) {
+  void chooseAnswer(String answer) {
     selectedAnswers.add(answer);
     if (selectedAnswers.length == questions.length) {
       setState(() {
