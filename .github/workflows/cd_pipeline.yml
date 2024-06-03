@@ -17,28 +17,20 @@ jobs:
         with:
           flutter-version: "3.19.6"
 
-      - name: Prepare Ruby Environment
+      - name: Prepare Environment
         run: |
-          mkdir -p ~/ruby-tools
+          mkdir -p ~/.gem
           mkdir -p ~/runner_temp
           mkdir -p ~/runner_workspace
-          sudo chown -R $USER:$USER ~/ruby-tools ~/runner_temp ~/runner_workspace
-        shell: bash
-
-      - name: Install Ruby dependencies
-        run: sudo apt-get install -y autoconf automake bison libffi-dev libgdbm-dev libncurses5-dev libsqlite3-dev libtool libyaml-dev pkg-config sqlite3
-        shell: bash
-
-      - name: Install Ruby using RVM
-        run: |
-          curl -sSL https://get.rvm.io | bash -s stable
-          source ~/.rvm/scripts/rvm
-          rvm install 3.1.2
-          rvm use 3.1.2 --default
+          sudo chown -R $USER:$USER ~/.gem ~/runner_temp ~/runner_workspace
         shell: bash
 
       - name: Install Bundler
-        run: gem install bundler -v 2.4.22
+        run: |
+          gem install bundler -v 2.4.22
+        env:
+          GEM_HOME: ~/.gem
+          GEM_PATH: ~/.gem
         shell: bash
 
       - name: Setup Fastlane
@@ -46,6 +38,9 @@ jobs:
           cd android
           bundle install
           cd ../..
+        env:
+          GEM_HOME: ~/.gem
+          GEM_PATH: ~/.gem
         shell: bash
 
       - name: Install dependencies
@@ -68,6 +63,8 @@ jobs:
         env:
           FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+          GEM_HOME: ~/.gem
+          GEM_PATH: ~/.gem
         shell: bash
 
       - name: Send success notification to Slack
