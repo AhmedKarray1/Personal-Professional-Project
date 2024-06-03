@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Set up Flutter
-        uses: ./.github/actions/setup-flutter
+        uses: ./../.github/actions/setup-flutter
         with:
           flutter-version: "3.19.6"
 
@@ -29,13 +29,13 @@ jobs:
           cd ../..
 
       - name: Install dependencies
-        uses: ./.github/actions/install-dependencies
+        uses: ./../.github/actions/install-dependencies
 
       - name: Run Linter
-        uses: ./.github/actions/run-linter
+        uses: ./../.github/actions/run-linter
 
       - name: Run Tests
-        uses: ./.github/actions/run-tests
+        uses: ./../.github/actions/run-tests
 
       - name: Build
         run: flutter build apk
@@ -50,7 +50,7 @@ jobs:
 
       - name: Send success notification to Slack
         if: success()
-        uses: ./.github/actions/notify-slack
+        uses: ./../.github/actions/notify-slack
         with:
           status: "Success"
           color: "good"
@@ -58,7 +58,7 @@ jobs:
 
       - name: Send failure notification to Slack
         if: failure()
-        uses: ./.github/actions/notify-slack
+        uses: ./../.github/actions/notify-slack
         with:
           status: "Failure"
           color: "danger"
