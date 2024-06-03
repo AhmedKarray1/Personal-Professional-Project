@@ -17,10 +17,21 @@ jobs:
         with:
           flutter-version: "3.19.6"
 
+      - name: Prepare Ruby Environment
+        run: |
+          mkdir -p ~/ruby-tools
+          chmod -R 777 ~/ruby-tools
+        shell: bash
+
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.3"
+          cache: "bundle"
+        env:
+          RUNNER_TOOL_CACHE: ~/ruby-tools
+          RUNNER_TEMP: ~/ruby-tools/tmp
+          RUNNER_WORKSPACE: ~/ruby-tools/workspace
 
       - name: Setup Fastlane
         run: |
