@@ -3,7 +3,7 @@ name: CI/CD
 on:
   push:
     branches:
-      - '**'
+      - "**"
 
 jobs:
   lint:
@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      
+
       - name: Set up Flutter
         uses: subosito/flutter-action@v1
         with:

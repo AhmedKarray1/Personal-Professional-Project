@@ -46,18 +46,14 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
             const SizedBox(
               height: 31,
             ),
-            for (var i = 0; i < currentQuestion.getShuffledAnswers().length; i++)
-              AnswerButton(
-                currentQuestion.getShuffledAnswers()[i],
+            ...currentQuestion.answers.map(
+              (answer) => AnswerButton(
+                answer,
                 () {
-                  answerQuestion(
-                    currentQuestion.getShuffledAnswers()[i],
-                  );
+                  answerQuestion(answer);
                 },
-                key: ValueKey(
-                  i.toString(),
-                ),
               ),
+            ),
           ],
         ),
       ),
