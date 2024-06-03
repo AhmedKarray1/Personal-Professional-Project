@@ -21,7 +21,10 @@ jobs:
         run: |
           mkdir -p ~/ruby-tools
           chmod -R 777 ~/ruby-tools
-          export PATH="$HOME/ruby-tools/bin:$PATH"
+          mkdir -p ~/runner_temp
+          chmod -R 777 ~/runner_temp
+          mkdir -p ~/runner_workspace
+          chmod -R 777 ~/runner_workspace
         shell: bash
 
       - name: Setup Ruby
@@ -29,6 +32,10 @@ jobs:
         with:
           ruby-version: "3.3"
           bundler-cache: true
+        env:
+          RUNNER_TOOL_CACHE: ~/ruby-tools
+          RUNNER_TEMP: ~/runner_temp
+          RUNNER_WORKSPACE: ~/runner_workspace
 
       - name: Setup Fastlane
         run: |
