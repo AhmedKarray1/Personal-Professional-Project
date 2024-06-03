@@ -58,6 +58,7 @@ jobs:
           status: "Success"
           color: "good"
           text: "Deployment successful!"
+          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Send failure notification to Slack
         if: failure()
@@ -66,3 +67,4 @@ jobs:
           status: "Failure"
           color: "danger"
           text: "Deployment failed!"
+          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
