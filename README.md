@@ -12,19 +12,19 @@ This repository contains the CI and CD pipelines for our Flutter application, ru
 ## Tools and Technologies
 
 ### CI/CD Platform
-![GitHub Actions](https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png)
+<img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub Actions" width="50"/>
 
 ### Programming Language and Framework
-![Flutter](https://storage.googleapis.com/cms-storage-bucket/0dbfcc7a59cd1cf16282.png)
-![Ruby](https://www.ruby-lang.org/images/header-ruby-logo.png)
+<img src="https://storage.googleapis.com/cms-storage-bucket/0dbfcc7a59cd1cf16282.png" alt="Flutter" width="50"/>
+<img src="https://www.ruby-lang.org/images/header-ruby-logo.png" alt="Ruby" width="50"/>
 
 ### Dependency Management and Automation
-![Bundler](https://bundler.io/images/logo-black.png)
-![Fastlane](https://fastlane.tools/assets/img/fastlane_text.png)
-![OWASP](https://www.owasp.org/themes/owasp/assets/images/logo.png)
+<img src="https://bundler.io/images/logo-black.png" alt="Bundler" width="50"/>
+<img src="https://fastlane.tools/assets/img/fastlane_text.png" alt="Fastlane" width="100"/>
+<img src="https://www.owasp.org/themes/owasp/assets/images/logo.png" alt="OWASP" width="50"/>
 
 ### Communication
-![Slack](https://a.slack-edge.com/80588/marketing/img/icons/icon_slack_hash_colored.png)
+<img src="https://a.slack-edge.com/80588/marketing/img/icons/icon_slack_hash_colored.png" alt="Slack" width="50"/>
 
 ## CI Pipeline
 
