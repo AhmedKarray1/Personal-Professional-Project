@@ -4,12 +4,12 @@ This repository contains the CI and CD pipelines for our Flutter application, ru
 
 ## Team Members
 
-- Ahmed Karray
 - Samer Mansouri
+- Ahmed Karray
 - Elyes Belgouthi
 - Omar Maalej
 
-## Tools and Technologies
+## Technologies Used
 
 ### CI/CD Platform
 <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub Actions" width="50"/>
