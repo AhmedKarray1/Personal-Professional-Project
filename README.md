@@ -4,8 +4,8 @@ This repository contains the CI and CD pipelines for our Flutter application, ru
 
 ## Team Members
 
-- Samer Mansouri
 - Ahmed Karray
+- Samer Mansouri
 - Elyes Belgouthi
 - Omar Maalej
 
@@ -19,7 +19,7 @@ This repository contains the CI and CD pipelines for our Flutter application, ru
 <img src="https://www.ruby-lang.org/images/header-ruby-logo.png" alt="Ruby" width="50"/>
 
 ### Dependency Management and Automation
-<img src="https://bundler.io/images/logo-black.png" alt="Bundler" width="50"/>
+<img src="https://bundler.io/images/logo-black.png" alt="Bundler" width="100"/>
 <img src="https://fastlane.tools/assets/img/fastlane_text.png" alt="Fastlane" width="100"/>
 <img src="https://www.owasp.org/themes/owasp/assets/images/logo.png" alt="OWASP" width="50"/>
 
